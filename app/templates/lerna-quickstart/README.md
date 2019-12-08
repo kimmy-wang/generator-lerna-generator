@@ -1,9 +1,9 @@
-# Vango for vuepress
+# <%= name %>
 
-[vuepress-theme-vango](packages/vuepress-theme-vango): .
 
-[vuepress-theme-vango-cli](packages/vuepress-theme-vango-cli): .
+# Install
+
 
 ## License
 
-MIT
+<%= license %>
