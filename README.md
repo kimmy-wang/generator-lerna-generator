@@ -1,5 +1,7 @@
 # generator-lerna-generator
 
+![npm](https://img.shields.io/npm/v/generator-lerna-generator)
+
 The [lerna](https://lerna.js.org/) generator for [Yeoman](https://yeoman.io/).
 
 ## Installation
