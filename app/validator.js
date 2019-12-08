@@ -1,26 +1,14 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
-var nameRegex = /^[a-z0-9][a-z0-9\-]*$/i
+const nameRegex = /^[a-z0-9][a-z0-9\-]*$/i
 
-module.exports.validatePublisher = function(publisher) {
-  if (!publisher) {
-    return 'Missing publisher name'
-  }
-
-  if (!nameRegex.test(publisher)) {
-    return 'Invalid publisher name'
-  }
-
-  return true
-}
-
-module.exports.validateExtensionId = function(id) {
-  if (!id) {
+module.exports.validateProjectName = function(name) {
+  if (!name) {
     return 'Missing extension identifier'
   }
 
-  if (!nameRegex.test(id)) {
+  if (!nameRegex.test(name)) {
     return 'Invalid extension identifier'
   }
 
