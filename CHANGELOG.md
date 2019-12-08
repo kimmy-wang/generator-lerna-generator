@@ -11,8 +11,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.2-alpha.1](https://github.com/upcwangying/generator-lerna-generator/compare/v0.0.2-alpha.0...v0.0.2-alpha.1) (2019-12-08)
 
-### 0.0.2-alpha.0 (2019-12-08)
-
 
 ### Features
 
