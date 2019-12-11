@@ -14,11 +14,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/:user/:repo.git",
-    "directory": "packages/t-pkg"
+    "url": "git+<%= gitRepo %>.git",
+    "directory": "packages/pkg"
   },
-  "homepage": "https://github.com/:user/:repo",
-  "bugs": "https://github.com/:user/:repo/issues",
+  "homepage": "<%= gitRepo %>",
+  "bugs": "<%= gitRepo %>/issues",
   "authors": [
     "<%= author %>"
   ],

@@ -13,7 +13,7 @@ const chalk = require('chalk')
 module.exports = class extends Generator {
   constructor(args, opts) {
     super(args, opts)
-    this.option('packages', { type: Number })
+    this.option('number', { type: Number })
     this.option('name', { type: String })
 
     this.extensionConfig = Object.create(null)
@@ -136,7 +136,36 @@ module.exports = class extends Generator {
           })
       },
 
-      // 7. Ask for git
+      // 7. Ask for num of packages
+      askForPackageNum: () => {
+        const number = generator.options['number']
+        if (number) {
+          generator.extensionConfig.number = number
+          return Promise.resolve()
+        }
+
+        let packagePrompt = () => {
+          return generator
+            .prompt({
+              type: 'input',
+              name: 'number',
+              message: "What's the number of packages in your project?",
+              default: 2,
+            })
+            .then(gitAnswer => {
+              if (!isNaN(gitAnswer.number)) {
+                generator.extensionConfig.number = parseInt(gitAnswer.number)
+              } else {
+                generator.log('Please enter the number of packages again!')
+                packagePrompt()
+              }
+            })
+        }
+
+        return packagePrompt()
+      },
+
+      // 8. Ask for git
       askForGit: () => {
         return generator
           .prompt({
@@ -150,7 +179,7 @@ module.exports = class extends Generator {
           })
       },
 
-      // 8. Ask for project author
+      // 9. Ask for project author
       askForProjectLicense: () => {
         return generator
           .prompt({
@@ -163,9 +192,25 @@ module.exports = class extends Generator {
             generator.extensionConfig.license = descriptionAnswer.license
           })
       },
-    }
 
-    const loop = {}
+      // 10. Ask for git repo url
+      askForGitRepoUrl: () => {
+        generator.extensionConfig.gitRepo = 'https://github.com/your-name/your-repo-name'
+        if (!generator.extensionConfig.gitInit) {
+          return Promise.resolve()
+        }
+
+        return generator
+          .prompt({
+            type: 'confirm',
+            name: 'gitRepo',
+            message: "What's the url of your repository?",
+          })
+          .then(gitAnswer => {
+            generator.extensionConfig.gitRepo = gitAnswer.gitRepo
+          })
+      },
+    }
 
     // run all prompts in sequence. Results can be ignored.
     let result = Promise.resolve()
@@ -202,11 +247,6 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.sourceRoot() + '/packages/t-pkg/package.json',
       context.name + '/packages/pkg/package.json',
-      context,
-    )
-    this.fs.copyTpl(
-      this.sourceRoot() + '/packages/t-pkg2/package.json',
-      context.name + '/packages/pkg2/package.json',
       context,
     )
 
