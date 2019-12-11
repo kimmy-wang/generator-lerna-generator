@@ -1,5 +1,5 @@
 {
-  "name": "pkg",
+  "name": "<%= pkgName %>",
   <% if (independent) { %>
   "version": "0.0.1",
   <% } %>
@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "git+<%= gitRepo %>.git",
-    "directory": "packages/pkg"
+    "directory": "packages/<%= pkgDirectory %>"
   },
   "homepage": "<%= gitRepo %>",
   "bugs": "<%= gitRepo %>/issues",

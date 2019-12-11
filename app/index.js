@@ -7,7 +7,7 @@ const Generator = require('yeoman-generator')
 const yosay = require('yosay')
 
 const path = require('path')
-const validator = require('./validator')
+const validators = require('../libs/validators')
 const chalk = require('chalk')
 
 module.exports = class extends Generator {
@@ -44,7 +44,7 @@ module.exports = class extends Generator {
             name: 'name',
             message: "What's the name of your project?",
             default: generator.extensionConfig.name,
-            validate: validator.validateProjectName,
+            validate: validators.isPluginId,
           })
           .then(displayNameAnswer => {
             generator.extensionConfig.name = displayNameAnswer.name
@@ -90,6 +90,19 @@ module.exports = class extends Generator {
           })
           .then(gitAnswer => {
             generator.extensionConfig.independent = gitAnswer.independent
+          })
+      },
+
+      // 5. Ask for package scope
+      askForPackageScope: () => {
+        return generator
+          .prompt({
+            type: 'input',
+            name: 'scope',
+            message: "What's the name of your scoped packages?",
+          })
+          .then(gitAnswer => {
+            generator.extensionConfig.scope = gitAnswer.scope
           })
       },
 
@@ -165,21 +178,7 @@ module.exports = class extends Generator {
         return packagePrompt()
       },
 
-      // 8. Ask for git
-      askForGit: () => {
-        return generator
-          .prompt({
-            type: 'confirm',
-            name: 'gitInit',
-            message: 'Initialize a git repository?',
-            default: true,
-          })
-          .then(gitAnswer => {
-            generator.extensionConfig.gitInit = gitAnswer.gitInit
-          })
-      },
-
-      // 9. Ask for project author
+      // 8. Ask for project author
       askForProjectLicense: () => {
         return generator
           .prompt({
@@ -190,6 +189,20 @@ module.exports = class extends Generator {
           })
           .then(descriptionAnswer => {
             generator.extensionConfig.license = descriptionAnswer.license
+          })
+      },
+
+      // 9. Ask for git
+      askForGit: () => {
+        return generator
+          .prompt({
+            type: 'confirm',
+            name: 'gitInit',
+            message: 'Initialize a git repository?',
+            default: true,
+          })
+          .then(gitAnswer => {
+            generator.extensionConfig.gitInit = gitAnswer.gitInit
           })
       },
 
@@ -244,11 +257,23 @@ module.exports = class extends Generator {
 
     this.fs.copy(this.sourceRoot() + '/docs', context.name + '/docs')
     this.fs.copy(this.sourceRoot() + '/samples', context.name + '/samples')
-    this.fs.copyTpl(
-      this.sourceRoot() + '/packages/t-pkg/package.json',
-      context.name + '/packages/pkg/package.json',
-      context,
-    )
+
+    if (context.number >= 1) {
+      for (let i = 0; i < context.number; i++) {
+        this.extensionConfig.pkgDirectory = `pkg${i + 1}`
+        if (context.scope) {
+          const scope = context.scope.startsWith('@') ? context.scope : `@${context.scope}`
+          this.extensionConfig.pkgName = `${scope}/pkg${i + 1}`
+        } else {
+          this.extensionConfig.pkgName = `pkg${i + 1}`
+        }
+        this.fs.copyTpl(
+          this.sourceRoot() + '/packages/t-pkg/package.json',
+          context.name + `/packages/${this.extensionConfig.pkgDirectory}/package.json`,
+          context,
+        )
+      }
+    }
 
     if (this.extensionConfig.gitInit) {
       this.fs.copy(this.sourceRoot() + '/.gitignore', context.name + '/.gitignore')
