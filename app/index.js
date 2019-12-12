@@ -8,7 +8,6 @@ const yosay = require('yosay')
 
 const path = require('path')
 const validators = require('../libs/validators')
-const chalk = require('chalk')
 
 module.exports = class extends Generator {
   constructor(args, opts) {

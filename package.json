@@ -19,7 +19,8 @@
     "libs"
   ],
   "scripts": {
-    "release": "standard-version"
+    "release": "standard-version",
+    "test": "mocha 'tests/**/*.js'"
   },
   "license": "MIT",
   "repository": "upcwangying/generator-lerna-generator",
